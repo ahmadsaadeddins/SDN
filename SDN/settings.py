@@ -119,11 +119,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+STATIC_ROOT = BASE_DIR / 'static_root'
+MEDIA_ROOT = BASE_DIR / 'media_root'
 
 if DEBUG is False:
-    # from aws.conf import *
-
-    ALLOWED_HOSTS = [env("HOSTA"), env("HOSTB")]
 
     SESSION_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
@@ -133,14 +137,3 @@ if DEBUG is False:
     SECURE_REDIRECT_EXEMPT = []
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env('DB_NAME'),
-            'USER': env('DB_USERNAME'),
-            'PASSWORD': env('DB_PASSWORD'),
-            'HOST': env('DB_HOST'),
-            'PORT': env('DB_PORT')
-        }
-    }
