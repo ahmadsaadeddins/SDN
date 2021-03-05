@@ -9,6 +9,8 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">التاريخ</th>
+                <th scope="col">اليوم</th>
                 <th scope="col">اسم المنتج</th>
                 <th scope="col">الكمية</th>
                 <th scope="col">السعر</th>
@@ -20,6 +22,8 @@
             {% for item in Sales %}
             <tr>
                 <th scope="row">{{item.id}}</th>
+                <td>{{item.date|date:"Y/m/j" }}</td>
+                <td>{{item.day}}</td>
                 <td>{{item.item_name}}</td>
                 <td>{{item.qty}}</td>
                 <td>{{item.price}}</td>
