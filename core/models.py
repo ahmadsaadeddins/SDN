@@ -7,7 +7,10 @@ class Sales(models.Model):
     price = models.DecimalField(verbose_name="السعر",
                                 max_digits=10,
                                 decimal_places=2)
-    notes = models.CharField(max_length=254, null=True, blank=True)
+    notes = models.CharField(max_length=254,
+                             null=True,
+                             blank=True,
+                             verbose_name="ملاحظات")
 
     def __str__(self):
         return self.item_name + " | " + str(qty * price)
