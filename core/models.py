@@ -13,4 +13,4 @@ class Sales(models.Model):
                              verbose_name="ملاحظات")
 
     def __str__(self):
-        return self.item_name + " | " + str(qty * price)
+        return self.item_name + " | " + str(self.qty * self.price)
