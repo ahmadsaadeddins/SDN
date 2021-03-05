@@ -1,8 +1,8 @@
 #!/bin/sh
 
-python manage.py makemigrations
-python manage.py migrate
-python manage.py makesuper
+python manage.py makemigrations --settings=SDN.prodSettings
+python manage.py migrate --settings=SDN.prodSettings
+python manage.py makesuper --settings=SDN.prodSettings
 gunicorn SDN.wsgi --bind=0.0.0.0:80
 # docker service logs srv-captain--my-app --since 60m --follow
 # python manage.py loaddata mozn.json
