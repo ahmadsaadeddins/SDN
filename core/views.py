@@ -5,7 +5,7 @@ from .models import Sales
 
 
 def home(request):
-    qs = Sales.objects.all().filter(date__gte=timezone.now)
+    qs = Sales.objects.all().filter(date__gte=timezone.now())
     qs_count = qs.values('id').annotate(
         amount=Sum(F('price', ) *
                    F('qty'), output_field=FloatField())).order_by("-id")
