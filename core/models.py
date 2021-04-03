@@ -24,6 +24,20 @@ class Sales(models.Model):
     def __str__(self):
         return self.item_name + " | " + str(self.qty * self.price)
 
+class Expenses(models.Model):
+    date = models.DateField(auto_now=True)
+    expense_name = models.CharField(max_length=254, verbose_name="اسم المصروف")
+    qty = models.PositiveSmallIntegerField(verbose_name="الكمية")
+    price = models.DecimalField(verbose_name="السعر",
+                                max_digits=10,
+                                decimal_places=2)
+    notes = models.CharField(max_length=254,
+                             null=True,
+                             blank=True,
+                             verbose_name="ملاحظات")
+
+    def __str__(self):
+        return self.expense_name + " | " + str(self.qty * self.price)
 
 def pre_Sales_save_receiver(sender, instance, **kwargs):
     translation.activate('ar')

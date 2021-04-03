@@ -1,5 +1,30 @@
 from django.contrib import admin
-from .models import Sales
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+from .models import Sales, Expenses
 
+
+class SalesResource(resources.ModelResource):
+    class Meta:
+        model = Sales
+
+
+class SalesAdmin(ImportExportModelAdmin):
+    resource_class = SalesResource
+
+
+admin.site.register(Sales, SalesAdmin)
+
+
+class ExpensesResource(resources.ModelResource):
+    class Meta:
+        model = Expenses
+
+
+class ExpensesAdmin(ImportExportModelAdmin):
+    resource_class = ExpensesResource
+
+
+admin.site.register(Expenses, ExpensesAdmin)
 # Register your models here.
-admin.site.register(Sales)
+# admin.site.register(SalesResource, Expenses)
