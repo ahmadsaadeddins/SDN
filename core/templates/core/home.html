@@ -26,8 +26,8 @@
                 <td>{{item.day}}</td>
                 <td>{{item.item_name}}</td>
                 <td>{{item.qty}}</td>
-                <td>{{item.price}}</td>
-                <td>{% widthratio item.qty 1 item.price %}</td>
+                <td>{{item.selling_price}}</td>
+                <td>{% widthratio item.qty 1 item.selling_price %}</td>
                 <td>{{item.notes}}</td>
             </tr>
             {% endfor %}

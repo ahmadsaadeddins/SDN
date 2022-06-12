@@ -7,7 +7,7 @@ from .models import Sales, Expenses
 def home(request):
     qs = Sales.objects.all().filter(date__gte=timezone.now()).order_by("-id")
     qs_count = qs.values('id').annotate(
-        amount=Sum(F('price', ) *
+        amount=Sum(F('Purchase_price', ) *
                    F('qty'), output_field=FloatField())).order_by("-id")
 
     total = 0
@@ -24,7 +24,7 @@ def home(request):
 def total(request):
     qs = Sales.objects.all().order_by("-id")
     qs_count = qs.values('id').annotate(
-        amount=Sum(F('price', ) *
+        amount=Sum(F('selling_price', ) *
                    F('qty'), output_field=FloatField())).order_by("-id")
 
     total = 0
@@ -41,7 +41,7 @@ def total(request):
 def total_expenses(request):
     qs = Expenses.objects.all().order_by("-id")
     qs_count = qs.values('id').annotate(
-        amount=Sum(F('price', ) *
+        amount=Sum(F('selling_price', ) *
                    F('qty'), output_field=FloatField())).order_by("-id")
 
     total = 0

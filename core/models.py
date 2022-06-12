@@ -1,8 +1,38 @@
 from datetime import datetime
+from decimal import Decimal
+
 from django.db import models
+from django.db.models import Avg, Max, Sum
+from django.db.models.signals import pre_save, post_save
 
 from django.utils import translation
 from django.utils.translation import ugettext as _
+
+
+class Purchase(models.Model):
+    date = models.DateField(auto_now=True)
+    day = models.CharField(max_length=200,
+                           editable=True,
+                           blank=True,
+                           null=True)
+    item_name = models.CharField(max_length=254, verbose_name="اسم المنتج")
+    qty = models.PositiveSmallIntegerField(verbose_name="الكمية")
+    Purchase_price = models.DecimalField(verbose_name="سعر الشراء",
+                                         max_digits=10,
+                                         decimal_places=2)
+    selling_price = models.DecimalField(verbose_name="سعر البيع",
+                                        max_digits=10,
+                                        decimal_places=2)
+    wholesale_price = models.DecimalField(verbose_name=" سعر بيع الجمله",
+                                          max_digits=10,
+                                          decimal_places=2)
+    notes = models.CharField(max_length=254,
+                             null=True,
+                             blank=True,
+                             verbose_name="ملاحظات")
+
+    def __str__(self):
+        return self.item_name + " | " + str(self.qty * self.selling_price)
 
 
 class Sales(models.Model):
@@ -13,16 +43,30 @@ class Sales(models.Model):
                            null=True)
     item_name = models.CharField(max_length=254, verbose_name="اسم المنتج")
     qty = models.PositiveSmallIntegerField(verbose_name="الكمية")
-    price = models.DecimalField(verbose_name="السعر",
-                                max_digits=10,
-                                decimal_places=2)
+    selling_price = models.DecimalField(verbose_name="سعر البيع",
+                                        max_digits=10,
+                                        decimal_places=2)
+
     notes = models.CharField(max_length=254,
                              null=True,
                              blank=True,
                              verbose_name="ملاحظات")
 
     def __str__(self):
-        return self.item_name + " | " + str(self.qty * self.price)
+        return self.item_name + " | " + str(self.qty * self.selling_price)
+
+
+class Inventory(models.Model):
+    date = models.DateField(auto_now=True)
+    item_name = models.CharField(max_length=254, verbose_name="اسم المنتج")
+    qty = models.PositiveSmallIntegerField(verbose_name="الكمية")
+    wholesale_price = models.DecimalField(verbose_name=" سعر بيع الجمله",
+                                          max_digits=10,
+                                          decimal_places=2)
+
+    def __str__(self):
+        return self.item_name + " | " + str(self.qty)
+
 
 class Expenses(models.Model):
     date = models.DateField(auto_now=True)
@@ -39,7 +83,47 @@ class Expenses(models.Model):
     def __str__(self):
         return self.expense_name + " | " + str(self.qty * self.price)
 
-def pre_Sales_save_receiver(sender, instance, **kwargs):
-    translation.activate('ar')
-    if not instance.day:
-        instance.day = _(date_format(datetime.today(), 'l'))
+
+# def pre_Sales_save_receiver(sender, instance, **kwargs):
+#     translation.activate('ar')
+#     if not instance.day:
+#         instance.day = _(date_format(datetime.today(), 'l'))
+
+
+def post_inventory_save_receiver(sender, instance, created, **kwargs):
+    print(created)
+    if created:
+        avg_item_price = Purchase.objects.filter(
+            item_name=instance.item_name).aggregate(
+                Avg('wholesale_price'))['wholesale_price__avg']
+        check_item_in_inventory = Inventory.objects.filter(
+            item_name=instance.item_name)
+        if check_item_in_inventory:
+            inv_item = Inventory.objects.get_or_create(
+                item_name=instance.item_name)
+            inv_item[0].wholesale_price = avg_item_price
+            inv_item[0].qty += instance.qty
+            inv_item[0].save()
+        else:
+            inv_item = Inventory.objects.get_or_create(
+                item_name=instance.item_name,
+                qty=instance.qty,
+                wholesale_price=instance.wholesale_price)
+    else:
+        avg_item_price = Purchase.objects.filter(
+            item_name=instance.item_name).aggregate(
+                Avg('wholesale_price'))['wholesale_price__avg']
+        check_item_in_inventory = Inventory.objects.filter(
+            item_name=instance.item_name)
+        if check_item_in_inventory:
+            inv_item = Inventory.objects.get_or_create(
+                item_name=instance.item_name)
+            inv_item[0].wholesale_price = avg_item_price
+            inv_item[0].save()
+
+
+# def post_Saales_save_receiver(sender, instance, **kwargs):
+# instance.selling_price =
+
+post_save.connect(post_inventory_save_receiver, sender=Purchase)
+# pre_save.connect(post_Saales_save_receiver, sender=Saales)
