@@ -6,7 +6,7 @@ from django.db.models import Avg, Max, Sum
 from django.db.models.signals import pre_save, post_save
 
 from django.utils import translation
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 
 
 class Purchase(models.Model):
