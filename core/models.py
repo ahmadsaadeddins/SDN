@@ -104,6 +104,8 @@ class Expenses(models.Model):
 
 
 def post_inventory_save_receiver(sender, instance, created, **kwargs):
+    print("post_inventory_save_receiver")
+    print(created)
     if created:
         avg_item_price = Purchase.objects.filter(
             item_name=instance.item_name).aggregate(
@@ -131,7 +133,13 @@ def post_inventory_save_receiver(sender, instance, created, **kwargs):
             inv_item = Inventory.objects.get_or_create(
                 item_name=instance.item_name)
             inv_item[0].wholesale_price = avg_item_price
+            inv_item[0].qty += instance.qty
             inv_item[0].save()
+        else:
+            inv_item = Inventory.objects.get_or_create(
+                item_name=instance.item_name,
+                qty=instance.qty,
+                wholesale_price=instance.wholesale_price)
 
 
 def pre_purchase_save_receiver(sender, instance, **kwargs):
