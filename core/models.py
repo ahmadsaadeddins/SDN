@@ -42,6 +42,10 @@ class Purchase(models.Model):
                              blank=True,
                              verbose_name="ملاحظات")
 
+    class Meta:
+        verbose_name = "المشتريات"
+        verbose_name_plural = "المشتريات"
+
     def __str__(self):
         return self.item_name.item_name + " | " + str(
             self.qty * self.selling_price)
@@ -67,6 +71,10 @@ class Sales(models.Model):
                              blank=True,
                              verbose_name="ملاحظات")
 
+    class Meta:
+        verbose_name = "المبيعات"
+        verbose_name_plural = "المبيعات"
+
     def __str__(self):
         return self.item_name.item_name + " | " + str(
             self.qty * self.selling_price)
@@ -83,6 +91,10 @@ class Inventory(models.Model):
                                           max_digits=10,
                                           decimal_places=2)
 
+    class Meta:
+        verbose_name = "المخزن"
+        verbose_name_plural = "المخزن"
+
     def __str__(self):
         return self.item_name.item_name + " | " + str(self.qty)
 
@@ -98,6 +110,10 @@ class Expenses(models.Model):
                              null=True,
                              blank=True,
                              verbose_name="ملاحظات")
+
+    class Meta:
+        verbose_name = "المصاريف"
+        verbose_name_plural = "المصاريف"
 
     def __str__(self):
         return self.expense_name + " | " + str(self.qty * self.price)
