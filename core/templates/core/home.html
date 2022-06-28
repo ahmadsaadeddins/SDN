@@ -2,51 +2,65 @@
 
 {% block content %}
 
-<div class="container">
-
+<div class="container mt-5">
     {% if user.is_authenticated %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">التاريخ</th>
-                <th scope="col">اليوم</th>
-                <th scope="col">اسم المنتج</th>
-                <th scope="col">الكمية</th>
-                <th scope="col">السعر</th>
-                <th scope="col">الاجمالى</th>
-                <th scope="col">الملاحظات</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in Sales %}
-            <tr>
-                <th scope="row">{{item.id}}</th>
-                <td>{{item.date|date:"Y/m/j" }}</td>
-                <td>{{item.day}}</td>
-                <td>{{item.item_name}}</td>
-                <td>{{item.qty}}</td>
-                <td>{{item.selling_price}}</td>
-                <td>{% widthratio item.qty 1 item.selling_price %}</td>
-                <td>{{item.notes}}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <th scope="row">الاجمالى</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td> {{ Total }}</td>
-                <td> </td>
-            </tr>
-        </tbody>
-    </table>
-    {% endif %}
 
-    <div>
-        <p>a</p>
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'core:create-purchase' %}">عملية شراء</a>
+        </div>
+        <div class="col">
+
+            <a class="btn btn-outline-danger btn-lg " href="{% url 'core:create-expenses' %}">إدخال مصروف</a>
+        </div>
+        <div class="col">
+
+            <a class="btn btn-outline-warning btn-lg btn-block" href="{% url 'core:create-sales' %}">عملية بيع</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">التاريخ</th>
+                        <th scope="col">اليوم</th>
+                        <th scope="col">اسم المنتج</th>
+                        <th scope="col">الكمية</th>
+                        <th scope="col">السعر</th>
+                        <th scope="col">الاجمالى</th>
+                        <th scope="col">الملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in Sales %}
+                    <tr>
+                        <th scope="row">{{item.id}}</th>
+                        <td>{{item.date|date:"Y/m/j" }}</td>
+                        <td>{{item.day}}</td>
+                        <td>{{item.item_name}}</td>
+                        <td>{{item.qty}}</td>
+                        <td>{{item.selling_price}}</td>
+                        <td>{% widthratio item.qty 1 item.selling_price %}</td>
+                        <td>{{item.notes}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th scope="row">الاجمالى</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td> {{ Total }}</td>
+                        <td> </td>
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
     </div>
 </div>
 
